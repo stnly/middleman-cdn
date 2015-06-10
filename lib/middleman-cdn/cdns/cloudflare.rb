@@ -55,6 +55,11 @@ module Middleman
                 cloudflare.zone_file_purge(options[:zone], "#{base_url}#{file}")
               rescue => e
                 say_status(", " + "error: #{e.message}".red, header: false)
+                if e.message == "Purge rate limited."
+                  say_status("Continuing in 30 seconds...".light_red)
+                  sleep 30
+                  retry
+                end
               else
                 say_status("✔".green, header: false)
               end
